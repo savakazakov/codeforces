@@ -1,2 +1,7 @@
-.class
-.o
+## Java
+
+*.class
+
+## C
+
+*.o
