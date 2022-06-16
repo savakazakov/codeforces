@@ -8,25 +8,26 @@ public class Lanterns
 {
     public static void main(String[] args)
     {
-        Scanner myObj = new Scanner(System.in);
-
-        int n = myObj.nextInt(), l = myObj.nextInt();
-
-        List<Integer> lanterns = new ArrayList<>();
-
-        for(int i = 0; i < n; i++)
+        try (Scanner myObj = new Scanner(System.in))
         {
-            lanterns.add(myObj.nextInt());
+            int n = myObj.nextInt(), l = myObj.nextInt();
+
+            List<Integer> lanterns = new ArrayList<>();
+
+            for(int i = 0; i < n; i++)
+            {
+                lanterns.add(myObj.nextInt());
+            }
+
+            lanterns.sort(Comparator.naturalOrder());
+
+            if(lanterns.get(0) != 0)
+                lanterns.add(0, -1 * lanterns.get(0));
+            if(lanterns.get(lanterns.size() - 1) != l)
+                lanterns.add(2 * l - lanterns.get(lanterns.size() - 1));
+
+            System.out.println( (double) biggestConsDiff(lanterns) / 2);
         }
-
-        lanterns.sort(Comparator.naturalOrder());
-
-        if(lanterns.get(0) != 0)
-            lanterns.add(0, -1 * lanterns.get(0));
-        if(lanterns.get(lanterns.size() - 1) != l)
-            lanterns.add(2 * l - lanterns.get(lanterns.size() - 1));
-
-        System.out.println( (double) biggestConsDiff(lanterns) / 2);
     }
 
     public static int biggestConsDiff(List<Integer> list)

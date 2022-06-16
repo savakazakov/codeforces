@@ -5,50 +5,51 @@ public class BlackAndWhiteStripes
 
     public static void main(String[] args)
     {
-        Scanner myObj = new Scanner(System.in);
-
-        int tests = myObj.nextInt(), n, k, min, count;
-
-        String str;
-
-        for (int i = 0; i < tests; i++)
+        try (Scanner myObj = new Scanner(System.in))
         {
-            n = myObj.nextInt();
-            k = myObj.nextInt();
+            int tests = myObj.nextInt(), n, k, min, count;
 
-            str = myObj.next();
+            String str;
 
-            char[] charStr = str.toCharArray();
-
-            count = 0;
-
-            for (int j = 0; j < k; j++)
+            for (int i = 0; i < tests; i++)
             {
-                if (charStr[j] == 'W')
-                    count++;
-            }
+                n = myObj.nextInt();
+                k = myObj.nextInt();
 
-            min = count;
+                str = myObj.next();
 
-            for (int j = k; j < n; j++)
-            {
-                if(charStr[j-k] == 'W' && charStr[j] == 'B')
+                char[] charStr = str.toCharArray();
+
+                count = 0;
+
+                for (int j = 0; j < k; j++)
                 {
-                    count--;
-                    
-                    if(count < min)
-                    {
-                        min = count;
-                    }
-
-                    if(min == 0)
-                        break;
+                    if (charStr[j] == 'W')
+                        count++;
                 }
-                else if(charStr[j-k] == 'B' && charStr[j] == 'W')
-                    count++;
-            }
 
-            System.out.println(min);
+                min = count;
+
+                for (int j = k; j < n; j++)
+                {
+                    if(charStr[j-k] == 'W' && charStr[j] == 'B')
+                    {
+                        count--;
+                        
+                        if(count < min)
+                        {
+                            min = count;
+                        }
+
+                        if(min == 0)
+                            break;
+                    }
+                    else if(charStr[j-k] == 'B' && charStr[j] == 'W')
+                        count++;
+                }
+
+                System.out.println(min);
+            }
         }
     }
 }
