@@ -13,116 +13,79 @@ public class BalancedTrees
         {
             int tests = myObj.nextInt(), n, count = 0;
 
-            List<Integer> tree = new ArrayList<>();
-            Map<Integer, List<Integer>> subTrees = new HashMap<>();
+            int[] tree;
+            Map<Integer, Integer> subTrees = new HashMap<>();
 
             String colours;
+            int[] col;
 
             for(int i = 0; i < tests; i++)
             {
                 // Get the input.
                 // Number of vertices including the root.
                 n = myObj.nextInt();
+
+                tree = new int[n];
                 count = 0;
 
-                tree.add(0);
+                // Set to 1 so that line 62 doesn't go out of bounds.
+                tree[0] = 1;
 
                 for(int j = 1; j < n; j++)
                 {
-                    tree.add(myObj.nextInt());
+                    tree[j] = myObj.nextInt();
                 }
 
                 colours = myObj.next();
+                col = transformColours(colours);
 
                 // Main algorithm.
-                for(int j = tree.size(); j > 0; j--)
+                for(int j = tree.length; j > 0; j--)
                 {
-                    // If the value at index (j - 1) is a root of a sub tree.
-                    if(subTrees.containsKey(tree.get(j - 1)))
-                    {
-                        // Now if there is already a tree with root j.
-                        if(subTrees.containsKey(j))
-                        {
-                            if(checkBalanced(subTrees.get(j), colours))
-                            {
-                                // System.out.println(subTrees.get(j));
-                                count++;
-                            }
-                            // Merge the trees.
-                            subTrees.get(tree.get(j - 1)).addAll(subTrees.get(j));
-                            subTrees.remove(j);
-                        }
-                        else
-                        {
-                            // Add j to the sub tree.
-                            subTrees.get(tree.get(j - 1)).add(j);
-                        }
-                    }
-                    // If there is a sub tree with root j.
-                    else if(subTrees.containsKey(j))
-                    {
-                        if(checkBalanced(subTrees.get(j), colours))
-                        {
-                            // System.out.println(subTrees.get(j));
-                            count++;
-                        }
+                    // First count the complete sub trees.
+                    if(subTrees.containsKey(j) && subTrees.get(j) == 0)
+                        count++;
 
-                        subTrees.get(j).add(0, tree.get(j - 1));
-                        subTrees.put(tree.get(j - 1), subTrees.get(j));
-                        subTrees.remove(j);
+                    if(subTrees.containsKey(tree[j - 1]))
+                    {
+                        // If there is a branch to be merged.
+                        if(subTrees.containsKey(j))
+                            subTrees.replace(tree[j - 1], subTrees.get(tree[j - 1]) + subTrees.get(j));
+                        else
+                            subTrees.replace(tree[j - 1], subTrees.get(tree[j - 1]) + col[j - 1]);
                     }
                     else
                     {
-                        // Create a new entry.
-                        subTrees.put(tree.get(j - 1), new ArrayList<>(Arrays.asList(tree.get(j - 1), j)));
+                        // If there is a branch to be continued.
+                        if(subTrees.containsKey(j))
+                        {
+                            subTrees.put(tree[j - 1], subTrees.get(j) + col[tree[j - 1] - 1]);
+                            subTrees.remove(j);
+                        }
+                        else
+                            subTrees.put(tree[j - 1], col[j - 1] + col[tree[j - 1] - 1]);
                     }
                 }
 
-                // Reset the ADTs.
-                tree.clear();
-                subTrees.clear();
-
                 System.out.println(count);
+
+                // Clear the ADT.
+                subTrees.clear();
             }
         }
     }
 
-    /**
-     * Checks if the specified tree is balanced,
-     * i.e. number of black and white nodes are equal
-     * 
-     * @param subTree
-     *            is the specified tree.
-     * @param colours
-     *            is a String which specifies the colours
-     *            of the whole test case.
-     * @return true is balance and false otherwise.
-     */
-    public static boolean checkBalanced(List<Integer> subTree, String colours)
+    public static int[] transformColours(String colours)
     {
-        int bal = 0;
-
-        for(int n : subTree)
+        int[] result = new int[colours.length()];
+        for(int i = 0; i < colours.length(); i++)
         {
-            if(colours.charAt(n - 1) == 'B')
-            {
-                bal--;
-            }
+            if(colours.charAt(i) == 'W')
+                result[i] = 1;
             else
-                bal++;
+                result[i] = -1;
         }
 
-        return bal == 0;
+        return result;
     }
 }
-/* 
-1
-16
-1 1 3 4 3 5 7 5 7 10 10 12 6 4 14
-BBWBWBWBWWBWWWWB
-
-1
-7
-1 1 2 3 3 5
-WBBWWBW
-*/
