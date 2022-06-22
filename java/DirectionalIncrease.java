@@ -1,5 +1,3 @@
-import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class DirectionalIncrease
@@ -9,9 +7,8 @@ public class DirectionalIncrease
         try(Scanner myObj = new Scanner(System.in))
         {
             int tests = myObj.nextInt(), n;
-            long diff;
 
-            boolean flag;
+            boolean equalsFail, result;
 
             long[] target, temp;
 
@@ -20,10 +17,12 @@ public class DirectionalIncrease
                 // Get the input.
                 n = myObj.nextInt();
 
-                flag = false;
+                equalsFail = false;
 
                 target = new long[n];
                 temp = new long[n];
+
+                result = true;
 
                 for(int j = 0; j < n; j++)
                 {
@@ -32,11 +31,18 @@ public class DirectionalIncrease
 
                 for(int j = n - 1; j > 0; j--)
                 {
+                    // Indicates there are no more trailing zeroes
+                    // and equality breaking the process.
                     if(target[j] != 0)
-                        flag = true;
+                        equalsFail = true;
 
-                    if(target[j] > temp[j] || (flag && target[j] == temp[j]))
+                    // If it breaks at any point the result should be "No",
+                    // since the pointer is not on the first element.
+                    if(target[j] > temp[j] || (equalsFail && target[j] == temp[j]))
+                    {
+                        result = false;
                         break;
+                    }
                     else
                     {
                         temp[j - 1] += temp[j] - target[j];
@@ -44,7 +50,7 @@ public class DirectionalIncrease
                     }
                 }
 
-                if(Arrays.equals(temp, target))
+                if(result && temp[0] == target[0])
                     System.out.println("Yes");
                 else
                     System.out.println("No");
@@ -52,8 +58,3 @@ public class DirectionalIncrease
         }
     }
 }
-/*
-1
-4
-1 -1 1 -1
-*/
