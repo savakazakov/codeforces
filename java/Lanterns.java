@@ -1,3 +1,8 @@
+
+/**
+ * This problem's task can be found at : https://codeforces.com/problemset/problem/492/B
+ */
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;

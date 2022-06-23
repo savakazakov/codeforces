@@ -1,3 +1,8 @@
+
+/**
+ * This problem's task can be found at : https://codeforces.com/problemset/problem/1692/F
+ */
+
 import java.util.Scanner;
 import java.util.Arrays;
 

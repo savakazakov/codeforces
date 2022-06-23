@@ -1,3 +1,8 @@
+
+/**
+ * This problem's task can be found at : https://codeforces.com/problemset/problem/1676/G
+ */
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
