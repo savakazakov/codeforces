@@ -1,6 +1,6 @@
 
 /**
- * This problem's task can be found at : https://codeforces.com/problemset/problem/1676/F
+ * This problem's task can be found at: https://codeforces.com/problemset/problem/1676/F
  */
 
 import java.util.Map;

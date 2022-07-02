@@ -1,6 +1,6 @@
 
 /**
- * This problem's task can be found at : https://codeforces.com/problemset/problem/1693/A
+ * This problem's task can be found at: https://codeforces.com/problemset/problem/1693/A
  */
 
 import java.util.Scanner;
