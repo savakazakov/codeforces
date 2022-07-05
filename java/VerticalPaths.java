@@ -4,12 +4,8 @@
  */
 
 import java.util.ArrayList;
-import java.util.Arrays;
-// import java.util.Collections;
-// import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-// import java.util.concurrent.CopyOnWriteArrayList;
 
 public class VerticalPaths
 {
@@ -17,107 +13,78 @@ public class VerticalPaths
     {
         try(Scanner myObj = new Scanner(System.in))
         {
-            int tests = myObj.nextInt(), n, temp;
+            int tests = myObj.nextInt(), n;
 
-            List<List<Integer>> tree = new ArrayList<>();
+            List<Integer> tree;
+            List<Integer> leaves;
+            List<List<Integer>> vertPaths;
 
             for(int i = 0; i < tests; i++)
             {
                 n = myObj.nextInt();
+                tree = new ArrayList<>();
+                leaves = new ArrayList<>();
 
                 // Get the input.
                 for(int j = 0; j < n; j++)
                 {
-                    temp = myObj.nextInt();
-
-                    // if(temp == j + 1)
-                    // {
-                    // tree.add(new CopyOnWriteArrayList<>(Arrays.asList(temp)));
-                    // // System.out.println("check");
-                    // continue;
-                    // }
-
-                    tree.add(new ArrayList<>(Arrays.asList(j + 1, temp)));
+                    tree.add(myObj.nextInt());
                 }
 
-                System.out.println(
-                    findVerticalPaths(tree)
-                );
+                for(int j = n; j > 0; j--)
+                {
+                    // Ensure it is a leaf node.
+                    if(!tree.contains(j) || tree.size() == 1)
+                    {
+                        leaves.add(j);
+                    }
+                }
 
-                // Output the result.
-                // System.out.println(tree.size());
+                vertPaths = findVerticalPaths(tree, leaves);
 
-                // for(List<Integer> l : tree)
-                // {
-                //     System.out.println(l.size() + " size of branch");
+                System.out.println(vertPaths.size()/*  + "num of branches" */);
 
-                //     for(int j = l.size() - 1; j >= 0; j--)
-                //     {
-                //         System.out.println(l.get(j));
-                //     }
-                // }
+                for(List<Integer> l : vertPaths)
+                {
+                    System.out.println(l.size()/*  + "size of branches" */);
 
-                tree.clear();
+                    for(int j = l.size() - 1; j >= 0; j--)
+                    {
+                        System.out.println(l.get(j));
+                    }
+                }
             }
         }
     }
 
-    public static List<List<Integer>> findVerticalPaths(List<List<Integer>> tree)
+    public static List<List<Integer>> findVerticalPaths(List<Integer> tree, List<Integer> leaves)
     {
-        List<List<Integer>> result = new ArrayList<>();
-        boolean added = false, contains = false;
+        List<List<Integer>> vertPaths = new ArrayList<>();
+        List<Integer> path;
+        int node, temp;
 
-        for(List<Integer> l : tree)
+        for(int i = 0; i < leaves.size(); i++)
         {
-            for(List<Integer> k : result)
-            {
-                if(k.get(0) == l.get(l.size() - 1))
-                {
-                    if(l.get(0) != l.get(1))
-                        k.add(0, l.get(0));
-                    added = true;
-                    // break;
-                }
-                else if(k.get(k.size() - 1) == l.get(0))
-                {
-                    if(l.get(0) != l.get(1))
-                        k.add(l.get(l.size() - 1));
-                    added = true;
-                    // break;
-                }
+            path = new ArrayList<>();
+            node = leaves.get(i);
 
-                if(k.contains(l.get(l.size() - 1)))
-                {
-                    contains = true;
-                    // System.out.println("checl" + contains);
-                }
+            while(tree.get(node - 1) > 0)
+            {
+                path.add(node);
+
+                // Follow the branch.
+                temp = tree.get(node - 1);
+
+                // Mark the visited node.
+                tree.set(node - 1, 0);
+
+                node = temp;
             }
 
-            if(!added)
-            {
-                if(l.get(0) == l.get(1))
-                    result.add(new ArrayList<>(Arrays.asList(l.get(0))));
-                else
-                {
-                    // System.out.println(contains + "this is cont");
-                    if(contains)
-                    {
-                        result.add(new ArrayList<>(Arrays.asList(l.get(0))));
-                        // System.out.println("askjdfh");
-                    }
-                    else
-                    {
-                        result.add(new ArrayList<>(l));
-                        // System.out.println("CHECK");
-                    }
-                }
-            }
-
-            added = false;
-            contains = false;
+            vertPaths.add(path);
         }
 
-        return result;
+        return vertPaths;
     }
 }
 
@@ -147,35 +114,4 @@ public class VerticalPaths
 4
 2 2 2 2
 
-
- * if(l.size() == 0)
- * break;
- * 
- * // Get the end of the path.
- * parent = l.get(l.size() - 1);
- * 
- * // Scan the remaining paths for that parent node.
- * for(List<Integer> k : tree)
- * {
- * // Merge the paths.
- * if(k.get(0) == parent && !k.equals(l))
- * {
- * k.remove(0);
- * l.addAll(k);
- * tree.remove(k);
- * 
- * // Clear all the nodes which have the same parent.
- * for(List<Integer> t : tree)
- * {
- * if(t.get(t.size() - 1) == parent && !t.equals(l))
- * {
- * t.remove((Object) parent);
- * if(t.isEmpty())
- * tree.remove(t);
- * }
- * }
- * 
- * break;
- * }
- * }
  */
