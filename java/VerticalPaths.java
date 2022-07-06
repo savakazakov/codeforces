@@ -13,11 +13,11 @@ public class VerticalPaths
     {
         try(Scanner myObj = new Scanner(System.in))
         {
-            int tests = myObj.nextInt(), n;
+            int tests = myObj.nextInt(), n, node, temp;
 
             List<Integer> tree;
             List<Integer> leaves;
-            List<List<Integer>> vertPaths;
+            List<Integer> path;
 
             for(int i = 0; i < tests; i++)
             {
@@ -40,51 +40,37 @@ public class VerticalPaths
                     }
                 }
 
-                vertPaths = findVerticalPaths(tree, leaves);
+                System.out.println(leaves.size()/*  + "num of branches" */);
 
-                System.out.println(vertPaths.size()/*  + "num of branches" */);
-
-                for(List<Integer> l : vertPaths)
+                for(int j = 0; j < leaves.size(); j++)
                 {
-                    System.out.println(l.size()/*  + "size of branches" */);
+                    path = new ArrayList<>();
+                    node = leaves.get(j);
 
-                    for(int j = l.size() - 1; j >= 0; j--)
+                    while(tree.get(node - 1) > 0)
                     {
-                        System.out.println(l.get(j));
+                        path.add(node);
+
+                        // Follow the branch.
+                        temp = tree.get(node - 1);
+
+                        // Mark the visited node.
+                        tree.set(node - 1, 0);
+
+                        node = temp;
+                    }
+
+                    // Print the path size.
+                    System.out.println(path.size());
+
+                    // Print the path.
+                    for(int k = path.size() - 1; k >= 0; k--)
+                    {
+                        System.out.println(path.get(k));
                     }
                 }
             }
         }
-    }
-
-    public static List<List<Integer>> findVerticalPaths(List<Integer> tree, List<Integer> leaves)
-    {
-        List<List<Integer>> vertPaths = new ArrayList<>();
-        List<Integer> path;
-        int node, temp;
-
-        for(int i = 0; i < leaves.size(); i++)
-        {
-            path = new ArrayList<>();
-            node = leaves.get(i);
-
-            while(tree.get(node - 1) > 0)
-            {
-                path.add(node);
-
-                // Follow the branch.
-                temp = tree.get(node - 1);
-
-                // Mark the visited node.
-                tree.set(node - 1, 0);
-
-                node = temp;
-            }
-
-            vertPaths.add(path);
-        }
-
-        return vertPaths;
     }
 }
 
