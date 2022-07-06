@@ -4,8 +4,11 @@
  */
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class VerticalPaths
 {
@@ -13,17 +16,19 @@ public class VerticalPaths
     {
         try(Scanner myObj = new Scanner(System.in))
         {
-            int tests = myObj.nextInt(), n, node, temp;
+            int tests = myObj.nextInt(), n, node;
 
             List<Integer> tree;
-            List<Integer> leaves;
+            Set<Integer> leaves;
+            Set<Integer> visited;
             List<Integer> path;
 
             for(int i = 0; i < tests; i++)
             {
                 n = myObj.nextInt();
                 tree = new ArrayList<>();
-                leaves = new ArrayList<>();
+                leaves = new HashSet<>();
+                visited = new HashSet<>();
 
                 // Get the input.
                 for(int j = 0; j < n; j++)
@@ -31,33 +36,31 @@ public class VerticalPaths
                     tree.add(myObj.nextInt());
                 }
 
-                for(int j = n; j > 0; j--)
+                // Create the leaves set.
+                for(int j = 1; j <= n; j++)
                 {
-                    // Ensure it is a leaf node.
-                    if(!tree.contains(j) || tree.size() == 1)
-                    {
-                        leaves.add(j);
-                    }
+                    leaves.add(j);
                 }
+
+                if(n != 1)
+                    leaves.removeAll(tree);
 
                 System.out.println(leaves.size()/*  + "num of branches" */);
 
-                for(int j = 0; j < leaves.size(); j++)
+                Iterator<Integer> itr = leaves.iterator();
+
+                while(itr.hasNext())
                 {
                     path = new ArrayList<>();
-                    node = leaves.get(j);
+                    node = itr.next();
 
-                    while(tree.get(node - 1) > 0)
+                    while(!visited.contains(node))
                     {
                         path.add(node);
+                        visited.add(node);
 
                         // Follow the branch.
-                        temp = tree.get(node - 1);
-
-                        // Mark the visited node.
-                        tree.set(node - 1, 0);
-
-                        node = temp;
+                        node = tree.get(node - 1);
                     }
 
                     // Print the path size.
