@@ -1,81 +1,18 @@
 
 /**
- * This problem's task can be found at: https://codeforces.com/problemset/problem/1675/D
+ * Program with user defined FastReader for efficient input for code forces tasks.
+ * Reference: https://www.codingninjas.com/blog/2021/07/26/fast-i-o-in-java-for-competitive-programming/#:~:text=Using%20Reader%20Class,-This%20is%20one&text=It%20uses%20inputDataStream%20to%20read,method%20in%20java%20for%20input.
  */
-
-import java.util.ArrayList;
-import java.util.List;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
 
-public class VerticalPaths
+public class ReaderTemplate
 {
     public static void main(String[] args) throws IOException
     {
-        Reader input = new Reader();
+        // Write code here.
 
-        int tests = input.nextInt();
-
-        while(tests > 0)
-        {
-            tests--;
-            solve(input);
-        }
-    }
-
-    public static void solve(Reader input) throws IOException
-    {
-        int n = input.nextInt();
-        int numOfLeaves = 0;
-
-        int[] tree = new int[n + 1];
-        boolean[] inner = new boolean[n + 1];
-
-        // Get the input.
-        for(int i = 1; i < n + 1; i++)
-        {
-            tree[i] = input.nextInt();
-
-            if(inner[tree[i]] == false)
-                numOfLeaves++;
-
-            inner[tree[i]] = true;
-        }
-
-        if(n == 1)
-        {
-            System.out.println("1\n1\n1");
-            return;
-        }
-
-        boolean[] visited = new boolean[n + 1];
-        List<Integer> lastPath;
-
-        // Print the number of paths.
-        System.out.println(n - numOfLeaves);
-
-        for(int i = 1; i <= n; i++)
-        {
-            if(inner[i])
-                continue;
-            visited[i] = true;
-            lastPath = new ArrayList<>();
-            lastPath.add(i);
-
-            int v = i;
-            while(!visited[tree[v]] && tree[v] != v)
-            {
-                v = tree[v];
-                visited[v] = true;
-                lastPath.add(v);
-            }
-
-            System.out.println(lastPath.size());
-            for(int j = lastPath.size() - 1; j >= 0; j--)
-                System.out.println(lastPath.get(j));
-        }
     }
 
     static class Reader
