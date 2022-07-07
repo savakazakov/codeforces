@@ -4,11 +4,8 @@
  */
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
 public class VerticalPaths
 {
@@ -16,91 +13,65 @@ public class VerticalPaths
     {
         try(Scanner myObj = new Scanner(System.in))
         {
-            int tests = myObj.nextInt(), n, node;
+            int tests = myObj.nextInt();
 
-            List<Integer> tree;
-            Set<Integer> leaves;
-            Set<Integer> visited;
-            List<Integer> path;
-
-            for(int i = 0; i < tests; i++)
+            while(tests > 0)
             {
-                n = myObj.nextInt();
-                tree = new ArrayList<>();
-                leaves = new HashSet<>();
-                visited = new HashSet<>();
-
-                // Get the input.
-                for(int j = 0; j < n; j++)
-                {
-                    tree.add(myObj.nextInt());
-                }
-
-                // Create the leaves set.
-                for(int j = 1; j <= n; j++)
-                {
-                    leaves.add(j);
-                }
-
-                if(n != 1)
-                    leaves.removeAll(tree);
-
-                System.out.println(leaves.size()/*  + "num of branches" */);
-
-                Iterator<Integer> itr = leaves.iterator();
-
-                while(itr.hasNext())
-                {
-                    path = new ArrayList<>();
-                    node = itr.next();
-
-                    while(!visited.contains(node))
-                    {
-                        path.add(node);
-                        visited.add(node);
-
-                        // Follow the branch.
-                        node = tree.get(node - 1);
-                    }
-
-                    // Print the path size.
-                    System.out.println(path.size());
-
-                    // Print the path.
-                    for(int k = path.size() - 1; k >= 0; k--)
-                    {
-                        System.out.println(path.get(k));
-                    }
-                }
+                tests--;
+                solve(myObj);
             }
         }
     }
+
+    public static void solve(Scanner myObj)
+    {
+        int n = myObj.nextInt();
+
+        int[] tree = new int[n + 1];
+        boolean[] inner = new boolean[n + 1];
+        
+        // Get the input.
+        for(int i = 1; i < n + 1; i++)
+        {
+            tree[i] = myObj.nextInt();
+            inner[tree[i]] = true;
+        }
+        
+        if(n == 1)
+        {
+            System.out.println("1\n1\n1");
+            return;
+        }
+        
+        boolean[] visited = new boolean[n + 1];
+        List<List<Integer>> paths = new ArrayList<>();
+        List<Integer> lastPath;
+
+        for(int i = 1; i <= n; i++)
+        {
+            if(inner[i])
+                continue;
+            visited[i] = true;
+            lastPath = new ArrayList<>();
+            lastPath.add(i);
+            
+            int v = i;
+            while(!visited[tree[v]] && tree[v] != v)
+            {
+                v = tree[v];
+                visited[v] = true;
+                lastPath.add(v);
+            }
+
+            paths.add(lastPath);
+        }
+        
+        System.out.println(paths.size());
+        for(List<Integer> path : paths)
+        {
+            System.out.println(path.size());
+            for(int i = path.size() - 1; i >= 0; i--)
+                System.out.println(path.get(i));
+        }
+    }
 }
-
-/*
- 
-1
-5
-3 1 3 3 1
-
-1
-4
-1 1 4 1
-
-1
-7
-1 1 2 3 4 5 6
-
-1
-1
-1
-
-1
-6
-4 4 4 4 1 2
-
-1
-4
-2 2 2 2
-
- */
