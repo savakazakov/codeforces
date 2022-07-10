@@ -1,18 +1,13 @@
 
 /**
- * Program with user defined FastReader for efficient input for code forces tasks.
- * Reference: https://www.codingninjas.com/blog/2021/07/26/fast-i-o-in-java-for-competitive-programming/#:~:text=Using%20Reader%20Class,-This%20is%20one&text=It%20uses%20inputDataStream%20to%20read,method%20in%20java%20for%20input.
- */
-
-/**
- * This problem's task can be found at: 
+ * This problem's task can be found at: https://codeforces.com/problemset/problem/1667/A
  */
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class ReaderTemplate
+public class MakeIncreasing
 {
     public static void main(String[] args) throws IOException
     {
