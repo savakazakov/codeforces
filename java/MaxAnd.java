@@ -1,15 +1,13 @@
 
 /**
- * This problem's task can be found at: https://codeforces.com/problemset/problem/1675/D
+ * This problem's task can be found at: https://codeforces.com/problemset/problem/1669/H
  */
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class VerticalPaths
+public class MaxAnd
 {
     public static void main(String[] args) throws IOException
     {
@@ -26,55 +24,42 @@ public class VerticalPaths
 
     public static void solve(Reader input) throws IOException
     {
-        int n = input.nextInt();
-        int numOfLeaves = 0;
+        int n = input.nextInt(), k = input.nextInt();
+        long[] numbers = new long[n];
 
-        int[] tree = new int[n + 1];
-        boolean[] inner = new boolean[n + 1];
+        // bitComparator is used to extract the bits from the input.
+        long bitComparator, result = 0;
+
+        // Represents the operations needed to
+        // turn all bits at the respective power.
+        int opsNeeded = 0;
 
         // Get the input.
-        for(int i = 1; i < n + 1; i++)
+        for(int i = 0; i < n; i++)
+            numbers[i] = input.nextLong();
+
+        for(int i = 30; i >= 0; i--)
         {
-            tree[i] = input.nextInt();
+            bitComparator = (long) Math.pow(2, i);
 
-            if(inner[tree[i]] == false)
-                numOfLeaves++;
-
-            inner[tree[i]] = true;
-        }
-
-        if(n == 1)
-        {
-            System.out.println("1\n1\n1");
-            return;
-        }
-
-        boolean[] visited = new boolean[n + 1];
-        List<Integer> lastPath;
-
-        // Print the number of paths.
-        System.out.println(n - numOfLeaves);
-
-        for(int i = 1; i <= n; i++)
-        {
-            if(inner[i])
-                continue;
-            visited[i] = true;
-            lastPath = new ArrayList<>();
-            lastPath.add(i);
-
-            int v = i;
-            while(!visited[tree[v]] && tree[v] != v)
+            // Count the number of operations.
+            for(long l : numbers)
             {
-                v = tree[v];
-                visited[v] = true;
-                lastPath.add(v);
+                if((long) (l & bitComparator) == 0)
+                    opsNeeded++;
             }
 
-            System.out.println(lastPath.size());
-            for(int j = lastPath.size() - 1; j >= 0; j--)
-                System.out.println(lastPath.get(j));
+            // If k can accomodate that number update k and the result.
+            if(k >= opsNeeded)
+            {
+                k -= opsNeeded;
+                result += Math.pow(2, i);
+            }
+
+            opsNeeded = 0;
         }
+
+        System.out.println(result);
     }
 
     static class Reader
@@ -100,7 +85,7 @@ public class VerticalPaths
 
         public String readLine() throws IOException
         {
-            byte[] buf = new byte[64]; // line length
+            byte[] buf = new byte[64];
             int cnt = 0, c;
             while((c = read()) != -1)
             {
