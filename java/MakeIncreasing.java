@@ -13,7 +13,7 @@ public class MakeIncreasing
     {
         Reader input = new Reader();
 
-        int tests = input.nextInt();
+        int tests = 1;
 
         while(tests > 0)
         {
@@ -22,10 +22,79 @@ public class MakeIncreasing
         }
     }
 
+    // public static int incCeil(double d)
+    // {
+    // if(d % 1 == 0f)
+    // return (int) ++d;
+    // else
+    // return (int) Math.ceil(d);
+    // }
+
+    // public static int incFloor(double d)
+    // {
+    // if(d % 1 == 0f)
+    // return (int) --d;
+    // else
+    // return (int) Math.floor(d);
+    // }
+
     public static void solve(Reader input) throws IOException
     {
-        // Write code here.
-        
+        int n = input.nextInt();
+        int[] increments = new int[n];
+        int first;
+        int prev = 0;
+        int numOfMoves = Integer.MAX_VALUE;
+        int bestNumOfMoves = Integer.MAX_VALUE;
+        int counter = 0;
+
+        // Get the input.
+        for(int i = 0; i < n; i++)
+        {
+            increments[i] = input.nextInt();
+        }
+
+        // FIXME
+        /* This is not strictly increasing
+         * have to add an extra condition to check for equal increase.
+         */
+
+        while(counter < n)
+        {
+            numOfMoves = counter;
+            first = -1 * counter * increments[0];
+            counter++;
+            System.out.println(first + " increment of first");
+            prev = first;
+            
+            // Get the number of moves required to make it
+            // increasing for the specified first entry.
+            for(int i = 1; i < n; i++)
+            {
+                if(prev < 0)
+                {
+                    System.out.println(Math.abs(prev / increments[i]) + " (in prev<0) this is for i = " + i);
+                    numOfMoves += Math.abs(prev / increments[i]);
+                    prev = (prev / increments[i] + 1) * increments[i];
+                }
+                else
+                {
+                    // Try without math.abs.
+                    System.out.println(Math.abs(prev / increments[i] + 1) + " this is for i = " + i);
+                    numOfMoves += Math.abs(prev / increments[i] + 1);
+                    prev = (prev / increments[i] + 1) * increments[i];
+                }
+            }
+
+            if(numOfMoves < bestNumOfMoves)
+                bestNumOfMoves = numOfMoves;
+
+            // System.out.println(bestNumOfMoves + " BestNumOfMoves");
+            System.out.println(numOfMoves + " numOfMoves");
+            System.out.println();
+        }
+
+        System.out.println(bestNumOfMoves + " bestNumOfMoves");
     }
 
     static class Reader
