@@ -22,79 +22,53 @@ public class MakeIncreasing
         }
     }
 
-    // public static int incCeil(double d)
-    // {
-    // if(d % 1 == 0f)
-    // return (int) ++d;
-    // else
-    // return (int) Math.ceil(d);
-    // }
-
-    // public static int incFloor(double d)
-    // {
-    // if(d % 1 == 0f)
-    // return (int) --d;
-    // else
-    // return (int) Math.floor(d);
-    // }
-
     public static void solve(Reader input) throws IOException
     {
         int n = input.nextInt();
-        int[] increments = new int[n];
-        int first;
-        int prev = 0;
-        int numOfMoves = Integer.MAX_VALUE;
-        int bestNumOfMoves = Integer.MAX_VALUE;
-        int counter = 0;
+        int[] incs = new int[n];
+        int prev = 0, counter = 0, moves, numOfMoves = Integer.MAX_VALUE, bestNumOfMoves = Integer.MAX_VALUE;
 
         // Get the input.
         for(int i = 0; i < n; i++)
         {
-            increments[i] = input.nextInt();
+            incs[i] = input.nextInt();
         }
-
-        // FIXME
-        /* This is not strictly increasing
-         * have to add an extra condition to check for equal increase.
-         */
 
         while(counter < n)
         {
             numOfMoves = counter;
-            first = -1 * counter * increments[0];
-            counter++;
-            System.out.println(first + " increment of first");
-            prev = first;
-            
+
+            prev = counter * -1;
+
             // Get the number of moves required to make it
             // increasing for the specified first entry.
             for(int i = 1; i < n; i++)
             {
-                if(prev < 0)
+                moves = prev > 0 ? prev * incs[i - 1] / incs[i] + 1
+                        : prev * incs[i - 1] / incs[i];
+
+                if(prev * incs[i - 1] == moves * incs[i])
                 {
-                    System.out.println(Math.abs(prev / increments[i]) + " (in prev<0) this is for i = " + i);
-                    numOfMoves += Math.abs(prev / increments[i]);
-                    prev = (prev / increments[i] + 1) * increments[i];
+                    moves++;
                 }
-                else
-                {
-                    // Try without math.abs.
-                    System.out.println(Math.abs(prev / increments[i] + 1) + " this is for i = " + i);
-                    numOfMoves += Math.abs(prev / increments[i] + 1);
-                    prev = (prev / increments[i] + 1) * increments[i];
-                }
+
+                prev = moves;
+
+                // Could be optimised - if it becomes higher than bestNumOfMoves.
+                numOfMoves += Math.abs(moves);
             }
 
-            if(numOfMoves < bestNumOfMoves)
+            if(numOfMoves <= bestNumOfMoves)
+            {
                 bestNumOfMoves = numOfMoves;
+            }
 
-            // System.out.println(bestNumOfMoves + " BestNumOfMoves");
-            System.out.println(numOfMoves + " numOfMoves");
-            System.out.println();
+            counter++;
         }
 
-        System.out.println(bestNumOfMoves + " bestNumOfMoves");
+        System.out.println(bestNumOfMoves);
+
+        System.out.println(-75/75);
     }
 
     static class Reader
