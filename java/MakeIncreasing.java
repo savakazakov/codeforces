@@ -24,51 +24,46 @@ public class MakeIncreasing
 
     public static void solve(Reader input) throws IOException
     {
-        int n = input.nextInt();
-        int[] incs = new int[n];
-        int prev = 0, counter = 0, moves, numOfMoves = Integer.MAX_VALUE, bestNumOfMoves = Integer.MAX_VALUE;
+        final int n = input.nextInt();
+        final int[] incs = new int[n];
+        long prev, moves, numOfMoves, bestNumOfMoves = Long.MAX_VALUE;
 
         // Get the input.
         for(int i = 0; i < n; i++)
-        {
             incs[i] = input.nextInt();
-        }
 
-        while(counter < n)
+        for(int j = 0; j < n; j++)
         {
-            numOfMoves = counter;
+            numOfMoves = 0;
+            prev = 0;
 
-            prev = counter * -1;
-
-            // Get the number of moves required to make it
-            // increasing for the specified first entry.
-            for(int i = 1; i < n; i++)
+            // Calculate the moves for the positive (right) side.
+            for(int i = j + 1; i < n; i++)
             {
-                moves = prev > 0 ? prev * incs[i - 1] / incs[i] + 1
-                        : prev * incs[i - 1] / incs[i];
-
-                if(prev * incs[i - 1] == moves * incs[i])
-                {
-                    moves++;
-                }
-
+                moves = prev * incs[i - 1] / incs[i] + 1;
+    
+                prev = moves;
+    
+                numOfMoves += moves;
+            }
+    
+            prev = 0;
+    
+            // Calculate the moves for the negative (left) side.
+            for(int i = j; i > 0; i--)
+            {
+                moves = prev * incs[i] / incs[i - 1] + 1;
+    
                 prev = moves;
 
-                // Could be optimised - if it becomes higher than bestNumOfMoves.
-                numOfMoves += Math.abs(moves);
+                numOfMoves += moves;
             }
 
-            if(numOfMoves <= bestNumOfMoves)
-            {
+            if(numOfMoves < bestNumOfMoves)
                 bestNumOfMoves = numOfMoves;
-            }
-
-            counter++;
         }
 
         System.out.println(bestNumOfMoves);
-
-        System.out.println(-75/75);
     }
 
     static class Reader
