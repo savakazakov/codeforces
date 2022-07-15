@@ -25,6 +25,19 @@ public class EvenString
     public static void solve(Reader input) throws IOException
     {
         // Write code here.
+        // Rough algo:
+
+        /*
+         * scan the string until there is a problem:
+         * Then there are 2 posibilities.
+         * either remove the odd element and preserve the even one
+         * or remove the even element and preserve the odd one.
+         * Chose based on in which case the letter to complete the pair is closer(in
+         * order to remove less letters)
+         * Crucial step: DO NOT COMPLETE the pair, but run the test again(on the same
+         * index), since there might be some complete sequences in the middle. I.e. it
+         * is better to remove both faulting letters at the first place.
+         */
 
     }
 
