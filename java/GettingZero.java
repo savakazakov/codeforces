@@ -24,25 +24,20 @@ public class GettingZero
 
     public static void solve(Reader input) throws IOException
     {
-        // Write code here.
         int num = input.nextInt();
-        
+
+        // Check if the number is already 0(mod 2^15).
         if(num == 0)
         {
             System.out.println(0);
             return;
         }
-        
+
         int best = -num2Factors(num), numOfAdds = 0, numOfMults = 0;
 
-
-        // System.out.println(best);
-
-        // Might not be 15.
         // Get the optimal number of add operations.
         for(int i = 1; i < 15; i++)
         {
-            // System.out.println(i+num + " this is i+num " + num2Factors(i + num) + " factors" );
             if(i - num2Factors(num + i) < best)
             {
                 best = i - num2Factors(num + i);
@@ -50,19 +45,22 @@ public class GettingZero
             }
         }
 
+        // In order for the number to be 0(mod 2^15) it has
+        // to have 15 factors that are 2. Therefore, if the
+        // optimal number of add operations gives x 2-factors,
+        // there must be an additional 15 - x multiply operations.
         numOfMults = 15 - num2Factors(num + numOfAdds);
-        // System.out.println(numOfAdds + " number of adds.");
-        // System.out.println(numOfMults + " number of mults.");
 
-        System.out.println(numOfAdds + numOfMults/*  + " together." */);
+        System.out.println(numOfAdds + numOfMults);
     }
 
-    /* 
-6
-0 19 32764 10240 49 32767
-
+    /**
+     * Get the power of the 2 factor.
+     * I.e. how many 2s are a factor of n.
+     * 
+     * @param n - the number
+     * @return - the power of the 2 factor.
      */
-
     public static int num2Factors(int n)
     {
         int i = 0;
@@ -71,9 +69,8 @@ public class GettingZero
         {
             i++;
             n /= 2;
-            // System.out.println("test");
         }
-        
+
         return i;
     }
 
