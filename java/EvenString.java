@@ -6,14 +6,18 @@
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class EvenString
 {
     public static void main(String[] args) throws IOException
     {
-        Reader input = new Reader();
+        // Reader input = new Reader();
+        Scanner input = new Scanner(System.in);
 
-        int tests = input.nextInt();
+        int tests = Integer.parseInt(input/* .readLine() */.nextLine());
 
         while(tests > 0)
         {
@@ -22,23 +26,60 @@ public class EvenString
         }
     }
 
-    public static void solve(Reader input) throws IOException
+    public static void solve(/* Reader */Scanner input) throws IOException
     {
-        // Write code here.
-        // Rough algo:
+        // Could be optimised.
+        List<Character> str = new ArrayList<>();
+        for(char c : input/* .readLine() */.nextLine().toCharArray())
+            str.add(c);
 
-        /*
-         * scan the string until there is a problem:
-         * Then there are 2 posibilities.
-         * either remove the odd element and preserve the even one
-         * or remove the even element and preserve the odd one.
-         * Chose based on in which case the letter to complete the pair is closer(in
-         * order to remove less letters)
-         * Crucial step: DO NOT COMPLETE the pair, but run the test again(on the same
-         * index), since there might be some complete sequences in the middle. I.e. it
-         * is better to remove both faulting letters at the first place.
-         */
+        // System.out.println(str);
 
+        int initialSize = str.size();
+
+        for(int i = 0; i < str.size(); i += 2)
+        {
+            // Index out of bounds.
+            if(i + 1 < str.size() && !str.get(i).equals(str.get(i + 1)))
+            {
+                // System.out.println(i + " with char " + str.get(i));
+                // System.out.println(i + 1 + " with char " + str.get(i + 1));
+                // System.out.println(str.remove(idxToRem(str, i)) + " removed");
+                str.remove(idxToRem(str, i));
+                i -= 2;
+            }
+        }
+
+        if(str.size() % 2 != 0)
+        {
+            str.remove(str.size() - 1);
+        }
+
+        System.out.println(initialSize - str.size());
+    }
+
+    /**
+     * Returns the index of the character that needs to be removed.
+     * 
+     * @param s - the String being processed.
+     * @param startIdx - the index of the first character in the faulting pair.
+     * @return - the index of the charter.
+     */
+    public static int idxToRem(List<Character> s, int startIdx)
+    {
+        int idx = startIdx + 2;
+
+        while(idx < s.size())
+        {
+            if(s.get(idx).equals(s.get(startIdx)))
+                return startIdx + 1;
+            else if(s.get(idx).equals(s.get(startIdx + 1)))
+                return startIdx;
+
+            idx++;
+        }
+
+        return startIdx;
     }
 
     static class Reader
