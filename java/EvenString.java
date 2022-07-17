@@ -6,7 +6,6 @@
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,7 +16,7 @@ public class EvenString
         // Reader input = new Reader();
         Scanner input = new Scanner(System.in);
 
-        int tests = Integer.parseInt(input/* .readLine() */.nextLine());
+        int tests = Integer.parseInt(input.nextLine());
 
         while(tests > 0)
         {
@@ -26,37 +25,83 @@ public class EvenString
         }
     }
 
-    public static void solve(/* Reader */Scanner input) throws IOException
+    public static void solve(Scanner/* Reader */ input) throws IOException
     {
-        // Could be optimised.
-        List<Character> str = new ArrayList<>();
-        for(char c : input/* .readLine() */.nextLine().toCharArray())
-            str.add(c);
+        char[] str = input/* .readLine() */.nextLine().toCharArray();
 
-        // System.out.println(str);
+        int oddIdx = 0, evenIdx = 1, dels = 0, idx = 0;
 
-        int initialSize = str.size();
-
-        for(int i = 0; i < str.size(); i += 2)
+        while(evenIdx < str.length)
         {
-            // Index out of bounds.
-            if(i + 1 < str.size() && !str.get(i).equals(str.get(i + 1)))
+            // There is a faulting pair.
+            if(str[oddIdx] != str[evenIdx])
             {
-                // System.out.println(i + " with char " + str.get(i));
-                // System.out.println(i + 1 + " with char " + str.get(i + 1));
-                // System.out.println(str.remove(idxToRem(str, i)) + " removed");
-                str.remove(idxToRem(str, i));
-                i -= 2;
+                // System.out.println("3 tests");
+
+                // A character must be removed.
+                dels++;
+                idx = evenIdx + 1;
+                // System.out.println("idx " + idx);
+
+                while(true)
+                {
+                    if(idx == str.length)
+                    {
+                        dels++;
+                        evenIdx += 2;
+                        oddIdx = evenIdx - 1;
+                        break;
+                    }
+
+                    if(str[idx] == str[oddIdx])
+                    {
+                        // System.out.println("oddIdx first " + oddIdx);
+                        evenIdx++;
+                        break;
+                    }
+                    else if(str[idx] == str[evenIdx])
+                    {
+                        // System.out.println("evenIdx first " + evenIdx);
+                        oddIdx = evenIdx;
+                        evenIdx++;
+                        break;
+                    }
+
+                    idx++;
+                }
+
+            }
+            else
+            {
+                // System.out.println("4 tests");
+
+                evenIdx += 2;
+                oddIdx = evenIdx - 1;
             }
         }
 
-        if(str.size() % 2 != 0)
+        // If there is a single character at the end.
+        if(evenIdx == str.length)
         {
-            str.remove(str.size() - 1);
+            dels++;
         }
 
-        System.out.println(initialSize - str.size());
+        System.out.println(dels /* + " dels" */);
+        
+
+        // if(str.size() % 2 != 0)
+        // {
+        //     str.remove(str.size() - 1);
+        // }
+
+        // System.out.println(initialSize - str.size());
     }
+
+/* 
+1
+bmefbmuyw
+
+ */
 
     /**
      * Returns the index of the character that needs to be removed.
