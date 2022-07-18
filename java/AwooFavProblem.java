@@ -1,13 +1,13 @@
 
 /**
- * This problem's task can be found at: https://codeforces.com/problemset/problem/1701/C
+ * This problem's task can be found at: https://codeforces.com/problemset/problem/1697/C
  */
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class ScheduleManagement
+public class AwooFavProblem
 {
     public static void main(String[] args) throws IOException
     {
@@ -24,39 +24,8 @@ public class ScheduleManagement
 
     public static void solve(Reader input) throws IOException
     {
-        int n = input.nextInt(), m = input.nextInt(), lvl = m / n;
-        int[] skds = new int[n];
+        // Write code here.
 
-        // Get the input.
-        // This assigns the tasks to the worker that is proficient at that task.
-        for(int i = 0; i < m; i++)
-            skds[input.nextInt() - 1]++;
-
-        while(!level(skds, lvl))
-            lvl++;
-
-        System.out.println(lvl);
-    }
-
-    /**
-     * Determines whether the schedule can be redistributed under a certain level.
-     * 
-     * @param skds - the schedule where all tasks are assigned to their proficient
-     *        workers.
-     * @param level - the level or threshold for redistribution.
-     * @return - true if possible and false otherwise.
-     */
-    public static boolean level(int[] skds, int level)
-    {
-        int tasksOverLvl = 0, doubleSlotsUnderLvl = 0;
-
-        for(int i : skds)
-        {
-            tasksOverLvl += i > level ? i - level : 0;
-            doubleSlotsUnderLvl += i < level - 1 ? (level - i) / 2 : 0;
-        }
-
-        return tasksOverLvl <= doubleSlotsUnderLvl;
     }
 
     static class Reader
