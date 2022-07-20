@@ -3,17 +3,16 @@
  * This problem's task can be found at: https://codeforces.com/problemset/problem/1697/C
  */
 
-import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class AwooFavProblem
 {
     public static void main(String[] args) throws IOException
     {
-        Reader input = new Reader();
+        Scanner input = new Scanner(System.in);
 
-        int tests = input.nextInt();
+        int tests = Integer.parseInt(input.nextLine());
 
         while(tests > 0)
         {
@@ -22,144 +21,51 @@ public class AwooFavProblem
         }
     }
 
-    public static void solve(Reader input) throws IOException
+    public static void solve(Scanner input) throws IOException
     {
-        // Write code here.
+        int n = Integer.parseInt(input.nextLine());
 
+        char[] s = input.nextLine().toCharArray(), t = input.nextLine().toCharArray();
+
+        for(int i = 0; i < s.length; i++)
+        {
+            // If there is a difference.
+            if(s[i] != t[i])
+            {
+                if(s[i] == 'a' && t[i] == 'b' && checkAhead(s, i + 1, 'b', 'a'))
+                {
+                    continue;
+                }
+                else if(s[i] == 'b' && t[i] == 'c' && checkAhead(s, i + 1, 'c', 'b'))
+                {
+                    continue;
+                }
+                else
+                {
+                    System.out.println("NO");
+                    return;
+                }
+            }
+        }
+
+        System.out.println("YES");
     }
 
-    static class Reader
+    public static boolean checkAhead(char[] s, int fromIndex, char target, char through)
     {
-        final private int BUFFER_SIZE = 1 << 16;
-        private DataInputStream din;
-        private byte[] buffer;
-        private int bufferPointer, bytesRead;
-
-        public Reader()
+        for(int i = fromIndex; i < s.length; i++)
         {
-            din = new DataInputStream(System.in);
-            buffer = new byte[BUFFER_SIZE];
-            bufferPointer = bytesRead = 0;
-        }
-
-        public Reader(String file_name) throws IOException
-        {
-            din = new DataInputStream(new FileInputStream(file_name));
-            buffer = new byte[BUFFER_SIZE];
-            bufferPointer = bytesRead = 0;
-        }
-
-        public String readLine() throws IOException
-        {
-            byte[] buf = new byte[64];
-            int cnt = 0, c;
-            while((c = read()) != -1)
+            if(s[i] == target)
             {
-                if(c == '\n')
-                {
-                    if(cnt != 0)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                buf[cnt++] = (byte) c;
+                // Swap the character that is yet to be scanned.
+                s[i] = through;
+                return true;
             }
-            return new String(buf, 0, cnt);
+            else if(s[i] != through)
+                return false;
         }
 
-        public int nextInt() throws IOException
-        {
-            int ret = 0;
-            byte c = read();
-            while(c <= ' ')
-            {
-                c = read();
-            }
-            boolean neg = (c == '-');
-            if(neg)
-                c = read();
-            do
-            {
-                ret = ret * 10 + c - '0';
-            }
-            while((c = read()) >= '0' && c <= '9');
-
-            if(neg)
-                return -ret;
-            return ret;
-        }
-
-        public long nextLong() throws IOException
-        {
-            long ret = 0;
-            byte c = read();
-            while(c <= ' ')
-                c = read();
-            boolean neg = (c == '-');
-            if(neg)
-                c = read();
-            do
-            {
-                ret = ret * 10 + c - '0';
-            }
-            while((c = read()) >= '0' && c <= '9');
-            if(neg)
-                return -ret;
-            return ret;
-        }
-
-        public double nextDouble() throws IOException
-        {
-            double ret = 0, div = 1;
-            byte c = read();
-            while(c <= ' ')
-                c = read();
-            boolean neg = (c == '-');
-            if(neg)
-                c = read();
-
-            do
-            {
-                ret = ret * 10 + c - '0';
-            }
-            while((c = read()) >= '0' && c <= '9');
-
-            if(c == '.')
-            {
-                while((c = read()) >= '0' && c <= '9')
-                {
-                    ret += (c - '0') / (div *= 10);
-                }
-            }
-
-            if(neg)
-                return -ret;
-            return ret;
-        }
-
-        private void fillBuffer() throws IOException
-        {
-            bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
-            if(bytesRead == -1)
-                buffer[0] = -1;
-        }
-
-        private byte read() throws IOException
-        {
-            if(bufferPointer == bytesRead)
-                fillBuffer();
-            return buffer[bufferPointer++];
-        }
-
-        public void close() throws IOException
-        {
-            if(din == null)
-                return;
-            din.close();
-        }
+        // In case all subsequent characters are equal to through.
+        return false;
     }
 }
