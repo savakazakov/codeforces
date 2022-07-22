@@ -23,7 +23,7 @@ public class AwooFavProblem
 
     public static void solve(Scanner input) throws IOException
     {
-        int n = Integer.parseInt(input.nextLine());
+        Integer.parseInt(input.nextLine());
 
         char[] s = input.nextLine().toCharArray(), t = input.nextLine().toCharArray();
 
