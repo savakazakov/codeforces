@@ -3,16 +3,14 @@
  * This problem's task can be found at: https://codeforces.com/problemset/problem/1705/C
  */
 
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class UnfinishedEssay
 {
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args)
     {
-        // Reader input = new Reader();
         Scanner input = new Scanner(System.in);
 
         int tests = input.nextInt();
@@ -24,166 +22,47 @@ public class UnfinishedEssay
         }
     }
 
-    public static void solve(/* Reader */Scanner input) throws IOException
+    public static void solve(Scanner input)
     {
         int n = input.nextInt(), c = input.nextInt(), q = input.nextInt();
+        long copyStart = 0, copyEnd = 0, curEnd = n + 1, query = 0;
+        List<Section> sections = new ArrayList<>();
         input.nextLine();
-        
+
         String s = input.nextLine();
-         
+
         for(int i = 0; i < c; i++)
         {
-            s = s + s.substring(input.nextInt() - 1, input.nextInt());
-
-            // copyStart[i] = input.nextInt();
-            // copyEnd[i] = input.nextInt();
+            copyStart = input.nextLong();
+            copyEnd = input.nextLong();
+            sections.add(new Section(curEnd, copyStart));
+            curEnd += copyEnd - copyStart + 1;
         }
-
-        // System.out.println(s);
 
         for(int i = 0; i < q; i++)
         {
-            // queries[i] = input.nextInt();
-            System.out.println(s.charAt(input.nextInt() - 1)/*  + " char at" */);
+            query = input.nextLong();
+
+            for(int j = c - 1; j >= 0; j--)
+            {
+                if(query < sections.get(j).start)
+                    continue;
+                else
+                    query -= sections.get(j).offset;
+            }
+
+            System.out.println(s.charAt((int) query - 1));
         }
     }
 
-    // markmarkmarrkmark
-    // markmarmarkmar
-    // creamiireeareamiire
-
-    static class Reader
+    static class Section
     {
-        final private int BUFFER_SIZE = 1 << 16;
-        private DataInputStream din;
-        private byte[] buffer;
-        private int bufferPointer, bytesRead;
+        private long start, offset;
 
-        public Reader()
+        public Section(long start, long copyStart)
         {
-            din = new DataInputStream(System.in);
-            buffer = new byte[BUFFER_SIZE];
-            bufferPointer = bytesRead = 0;
-        }
-
-        public Reader(String file_name) throws IOException
-        {
-            din = new DataInputStream(new FileInputStream(file_name));
-            buffer = new byte[BUFFER_SIZE];
-            bufferPointer = bytesRead = 0;
-        }
-
-        public String readLine() throws IOException
-        {
-            byte[] buf = new byte[64];
-            int cnt = 0, c;
-            while((c = read()) != -1)
-            {
-                if(c == '\n')
-                {
-                    if(cnt != 0)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                buf[cnt++] = (byte) c;
-            }
-            return new String(buf, 0, cnt);
-        }
-
-        public int nextInt() throws IOException
-        {
-            int ret = 0;
-            byte c = read();
-            while(c <= ' ')
-            {
-                c = read();
-            }
-            boolean neg = (c == '-');
-            if(neg)
-                c = read();
-            do
-            {
-                ret = ret * 10 + c - '0';
-            }
-            while((c = read()) >= '0' && c <= '9');
-
-            if(neg)
-                return -ret;
-            return ret;
-        }
-
-        public long nextLong() throws IOException
-        {
-            long ret = 0;
-            byte c = read();
-            while(c <= ' ')
-                c = read();
-            boolean neg = (c == '-');
-            if(neg)
-                c = read();
-            do
-            {
-                ret = ret * 10 + c - '0';
-            }
-            while((c = read()) >= '0' && c <= '9');
-            if(neg)
-                return -ret;
-            return ret;
-        }
-
-        public double nextDouble() throws IOException
-        {
-            double ret = 0, div = 1;
-            byte c = read();
-            while(c <= ' ')
-                c = read();
-            boolean neg = (c == '-');
-            if(neg)
-                c = read();
-
-            do
-            {
-                ret = ret * 10 + c - '0';
-            }
-            while((c = read()) >= '0' && c <= '9');
-
-            if(c == '.')
-            {
-                while((c = read()) >= '0' && c <= '9')
-                {
-                    ret += (c - '0') / (div *= 10);
-                }
-            }
-
-            if(neg)
-                return -ret;
-            return ret;
-        }
-
-        private void fillBuffer() throws IOException
-        {
-            bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
-            if(bytesRead == -1)
-                buffer[0] = -1;
-        }
-
-        private byte read() throws IOException
-        {
-            if(bufferPointer == bytesRead)
-                fillBuffer();
-            return buffer[bufferPointer++];
-        }
-
-        public void close() throws IOException
-        {
-            if(din == null)
-                return;
-            din.close();
+            this.start = start;
+            this.offset = start - copyStart;
         }
     }
 }
