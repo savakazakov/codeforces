@@ -24,8 +24,62 @@ public class QpwoeirutCity
 
     public static void solve(Reader input) throws IOException
     {
-        // Write code here.
+        int n = input.nextInt(), curFlrs = 0;
+        int[] buildings = new int[n];
 
+        // Has to be long since the numbers of floors accumulate from n integers.
+        long flrsToAdd = 0;
+
+        // Get the input.
+        for(int i = 0; i < n; i++)
+        {
+            buildings[i] = input.nextInt();
+        }
+
+        // If the number of buildings is odd then there is only
+        // one way to get the max number of cool buildings.
+        // Which is to make all odd buildings cool.
+        if(n % 2 == 1)
+        {
+            for(int i = 1; i < n - 1; i += 2)
+            {
+                curFlrs = Integer.max(buildings[i - 1], buildings[i + 1]) - buildings[i] + 1;
+                flrsToAdd += curFlrs > 0 ? curFlrs : 0;
+            }
+
+            System.out.println(flrsToAdd);
+        }
+        else
+        {
+            // Have to be long since the numbers of floors accumulate from n integers.
+            // odd/even represent the sum of floors needed
+            // for the odd/even buildings to become cool.
+            // odd is the current sum as the buildings are being traversed.
+            // While even is the total sum and it is being subtracted from.
+            long odd = 0, even = 0, minFlrs;
+
+            for(int i = 2; i < n - 1; i += 2)
+            {
+                curFlrs = Integer.max(buildings[i - 1], buildings[i + 1]) - buildings[i] + 1;
+                even += curFlrs > 0 ? curFlrs : 0;
+            }
+
+            minFlrs = even;
+
+            for(int i = 1; i < n - 1; i += 2)
+            {
+                curFlrs = Integer.max(buildings[i - 1], buildings[i + 1]) - buildings[i] + 1;
+                odd += curFlrs > 0 ? curFlrs : 0;
+
+                curFlrs = Integer.max(buildings[i], buildings[i + 2]) - buildings[i + 1] + 1;
+                even -= curFlrs > 0 ? curFlrs : 0;
+
+                if(minFlrs > odd + even)
+                    minFlrs = odd + even;
+            }
+
+            System.out.println(minFlrs);
+        }
     }
 
     static class Reader
