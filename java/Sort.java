@@ -24,8 +24,29 @@ public class Sort
 
     public static void solve(Reader input) throws IOException
     {
-        // Write code here.
+        int n = input.nextInt(), k = input.nextInt(), streak = 1, result = 0;
+        int[] nums = new int[n];
 
+        // Get the input.
+        for(int i = 0; i < n; i++)
+            nums[i] = input.nextInt();
+
+        for(int i = 1; i < n; i++)
+        {
+            if(nums[i - 1] < 2 * nums[i])
+                streak++;
+            else
+            {
+                // Calculate the streak once it is terminated.
+                result += streak - k > 0 ? streak - k : 0;
+                streak = 1;
+            }
+        }
+
+        // Because the loop exits without calculating the last streak;
+        result += streak - k > 0 ? streak - k : 0;
+
+        System.out.println(result);
     }
 
     static class Reader
