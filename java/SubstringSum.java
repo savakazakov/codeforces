@@ -3,15 +3,14 @@
  * This problem's task can be found at: https://codeforces.com/problemset/problem/1691/C
  */
 
-import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class SubstringSum
 {
     public static void main(String[] args) throws IOException
     {
-        Reader input = new Reader();
+        Scanner input = new Scanner(System.in);
 
         int tests = input.nextInt();
 
@@ -22,147 +21,41 @@ public class SubstringSum
         }
     }
 
-    public static void solve(Reader input) throws IOException
+    public static void solve(Scanner input) throws IOException
     {
-        int n = input.nextInt(), k = input.nextInt();
-        
-        String s = input.readLine();
+        int n = input.nextInt(), k = input.nextInt(), p1_first = 0, p1_last = 0, add = 0, numOfOnes = 0;
+        input.nextLine();
 
-        System.out.println(s);
-    }
+        String s = input.nextLine();
 
-    static class Reader
-    {
-        final private int BUFFER_SIZE = 1 << 16;
-        private DataInputStream din;
-        private byte[] buffer;
-        private int bufferPointer, bytesRead;
-
-        public Reader()
+        // Calculate the 1s in the String.
+        for(int i = 0; i < s.length(); i++)
         {
-            din = new DataInputStream(System.in);
-            buffer = new byte[BUFFER_SIZE];
-            bufferPointer = bytesRead = 0;
+            if(s.charAt(i) == '1')
+                numOfOnes++;
         }
 
-        public Reader(String file_name) throws IOException
+        // Get the positions of the first and last 1s.
+        p1_last = s.lastIndexOf('1');
+        p1_first = s.indexOf('1');
+
+        // The trick is to count the regular ones as 11s and the first and last
+        // positions independently. And these if statements are triggered if 1s are
+        // already in the last/first place.
+        if(numOfOnes > 0 && (n - 1 - p1_last) <= k)
         {
-            din = new DataInputStream(new FileInputStream(file_name));
-            buffer = new byte[BUFFER_SIZE];
-            bufferPointer = bytesRead = 0;
+            k -= (n - 1 - p1_last);
+            add += 1;
+            numOfOnes -= 1;
         }
 
-        public String readLine() throws IOException
+        if(numOfOnes > 0 && p1_first <= k)
         {
-            byte[] buf = new byte[64];
-            int cnt = 0, c;
-            while((c = read()) != -1)
-            {
-                if(c == '\n')
-                {
-                    if(cnt != 0)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                buf[cnt++] = (byte) c;
-            }
-            return new String(buf, 0, cnt);
+            k -= (p1_first);
+            add += 10;
+            numOfOnes -= 1;
         }
 
-        public int nextInt() throws IOException
-        {
-            int ret = 0;
-            byte c = read();
-            while(c <= ' ')
-            {
-                c = read();
-            }
-            boolean neg = (c == '-');
-            if(neg)
-                c = read();
-            do
-            {
-                ret = ret * 10 + c - '0';
-            }
-            while((c = read()) >= '0' && c <= '9');
-
-            if(neg)
-                return -ret;
-            return ret;
-        }
-
-        public long nextLong() throws IOException
-        {
-            long ret = 0;
-            byte c = read();
-            while(c <= ' ')
-                c = read();
-            boolean neg = (c == '-');
-            if(neg)
-                c = read();
-            do
-            {
-                ret = ret * 10 + c - '0';
-            }
-            while((c = read()) >= '0' && c <= '9');
-            if(neg)
-                return -ret;
-            return ret;
-        }
-
-        public double nextDouble() throws IOException
-        {
-            double ret = 0, div = 1;
-            byte c = read();
-            while(c <= ' ')
-                c = read();
-            boolean neg = (c == '-');
-            if(neg)
-                c = read();
-
-            do
-            {
-                ret = ret * 10 + c - '0';
-            }
-            while((c = read()) >= '0' && c <= '9');
-
-            if(c == '.')
-            {
-                while((c = read()) >= '0' && c <= '9')
-                {
-                    ret += (c - '0') / (div *= 10);
-                }
-            }
-
-            if(neg)
-                return -ret;
-            return ret;
-        }
-
-        private void fillBuffer() throws IOException
-        {
-            bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
-            if(bytesRead == -1)
-                buffer[0] = -1;
-        }
-
-        private byte read() throws IOException
-        {
-            if(bufferPointer == bytesRead)
-                fillBuffer();
-            return buffer[bufferPointer++];
-        }
-
-        public void close() throws IOException
-        {
-            if(din == null)
-                return;
-            din.close();
-        }
+        System.out.println(numOfOnes * 11 + add);
     }
 }
