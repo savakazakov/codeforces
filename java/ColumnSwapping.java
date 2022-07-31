@@ -6,6 +6,11 @@
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.swing.plaf.basic.BasicTreeUI.TreeCancelEditingAction;
 
 public class ColumnSwapping
 {
@@ -24,9 +29,79 @@ public class ColumnSwapping
 
     public static void solve(Reader input) throws IOException
     {
-        // Write code here.
+        int n = input.nextInt(), m = input.nextInt(), fstIdx = -1, scdIdx = -1, fstBadRow = -1;
+        int[][] matrix = new int[n][m];
 
+        // List<Integer> badIdx = new ArrayList<>();
+
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < m; j++)
+            {
+                matrix[i][j] = input.nextInt();
+            }
+        }
+
+        for(int i = 0; i < n; i++)
+        {
+            if(checkRow(matrix[i]))
+            {
+                fstBadRow = i;
+            }
+        }
+
+        for(int j = 1; j < m; j++)
+        {
+            // If not strictly increasing.
+            if(matrix[fstBadRow][j] < matrix[fstBadRow][j - 1])
+            {
+                if(fstIdx == -1)
+                    fstIdx = j;
+                else if(scdIdx == -1)
+                    scdIdx = j;
+                else
+                {
+                    // If there are more than 2 bad indecies.
+                    System.out.println(-1);
+                    return;
+                }
+            }
+        }
+
+        System.out.println(Arrays.deepToString(matrix));        
     }
+
+    public static boolean checkRow(int[] row)
+    {
+        for(int i = 1; i < row.length; i++)
+        {
+            if(row[i] < row[i - 1])
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    /*
+     * 5
+     * 2 3
+     * 1 2 3
+     * 1 1 1
+     * 2 2
+     * 4 1
+     * 2 3
+     * 2 2
+     * 2 1
+     * 1 1
+     * 2 3
+     * 6 2 1
+     * 5 4 3
+     * 2 1
+     * 1
+     * 2
+     * 
+     */
 
     static class Reader
     {
