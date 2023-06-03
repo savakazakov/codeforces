@@ -1,76 +1,113 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class MoscowPavingProblem
 {
-    private static final int n = 3;
-    private static boolean[][] solution = new boolean[n][n];
+    private static final int n = 5;
+    // private static boolean[][] solution = new boolean[n][n];
     // private static int[][] trackSquaresMatrix = new int[n][n];
 
     public static void main(String[] args)
     {
         // Testing chkCand.
-        solution = new boolean[][]{ {true, true, true},
-                                    {true, false, true},
-                                    {true, true, false} };
+        // solution = new boolean[][]{ {true, true, true},
+        //                             {true, false, true},
+        //                             {true, true, false} };
 
         // printSolution(solution);
 
-        boolean[][][] cands = genCands(2);
-        printCands(cands, 2);
+        boolean[][][] cands = genCands(n);
+        // printCands(cands, n);
+        int maxOs = 0, curOs = 0;
+
+
+        // TODO: Fix this. Dynamic ADT.
+        // Ugly but will do for now.
+        List<boolean[][]> sols = new ArrayList<>();
+
+        for (boolean[][] c : cands)
+        {
+            if (!chkCand(c, n, 0, 0))
+                continue;
+            
+            curOs = maxOs(c);
+
+            if (curOs > maxOs)
+            {
+                maxOs = curOs;
+                sols.clear();
+                sols.add(c);
+            }
+            else if (curOs == maxOs)
+            {
+                sols.add(c);
+            }
+        }
+
+        System.out.println("Maximum number of Os: " + maxOs);
+        System.out.println("Solutions: \n\n");
+
+        for (boolean[][] sol : sols)
+        {
+            printSolution(sol, n);
+            System.out.println("\n");
+        }
     }
 
-    public static boolean checkPossible(int x, int y)
-    {
-        // Down and to the right.
-        for(int i = 1; i < n; i++)
-        {
-            if(x + i >= n || y + i >= n)
-                break;
+    // public static boolean checkPossible(int x, int y)
+    // {
+    //     // Down and to the right.
+    //     for(int i = 1; i < n; i++)
+    //     {
+    //         if(x + i >= n || y + i >= n)
+    //             break;
 
-            if(solution[x + i][y] && solution[x][y + i] && solution[x + i][y + i])
-            {
-                return false;
-            }
-        }
+    //         if(solution[x + i][y] && solution[x][y + i] && solution[x + i][y + i])
+    //         {
+    //             return false;
+    //         }
+    //     }
 
-        // Down and to the left.
-        for(int i = 1; i < n; i++)
-        {
-            if(x - i < 0 || y + i >= n)
-                break;
+    //     // Down and to the left.
+    //     for(int i = 1; i < n; i++)
+    //     {
+    //         if(x - i < 0 || y + i >= n)
+    //             break;
 
-            if(solution[x - i][y] && solution[x][y + i] && solution[x - i][y + i])
-            {
-                return false;
-            }
-        }
+    //         if(solution[x - i][y] && solution[x][y + i] && solution[x - i][y + i])
+    //         {
+    //             return false;
+    //         }
+    //     }
 
-        // Up and to the left.
-        for(int i = 1; i < n; i++)
-        {
-            if(x - i < 0 || y - i < 0)
-                break;
+    //     // Up and to the left.
+    //     for(int i = 1; i < n; i++)
+    //     {
+    //         if(x - i < 0 || y - i < 0)
+    //             break;
 
-            if(solution[x - i][y] && solution[x][y - i] && solution[x - i][y - i])
-            {
-                return false;
-            }
-        }
+    //         if(solution[x - i][y] && solution[x][y - i] && solution[x - i][y - i])
+    //         {
+    //             return false;
+    //         }
+    //     }
 
-        // Up and to the right.
-        for(int i = 1; i < n; i++)
-        {
-            if(x + i >= n || y - i < 0)
-                break;
+    //     // Up and to the right.
+    //     for(int i = 1; i < n; i++)
+    //     {
+    //         if(x + i >= n || y - i < 0)
+    //             break;
 
-            if(solution[x + i][y] && solution[x][y - i] && solution[x + i][y - i])
-            {
-                return false;
-            }
-        }
+    //         if(solution[x + i][y] && solution[x][y - i] && solution[x + i][y - i])
+    //         {
+    //             return false;
+    //         }
+    //     }
 
-        // // This should never be reached.
-        // System.out.println("This should never be reached.");
-        return true;
-    }
+    //     // // This should never be reached.
+    //     // System.out.println("This should never be reached.");
+    //     return true;
+    // }
 
     /**
      * Checks a candidate solution.
@@ -97,6 +134,32 @@ public class MoscowPavingProblem
         return true;
     }
 
+    /**
+     * TODO: Finish this.
+     * @param sol
+     * @return
+     */
+    public static int maxOs(boolean[][] sol)
+    {
+        int numOfOs = 0;
+
+        for (int i = 0; i < sol.length; i++)
+        {
+            for (int j = 0; j < sol.length; j++)
+            {
+                if(sol[i][j])
+                    numOfOs++;
+            }
+        }
+
+        return numOfOs;
+    }
+
+    /**
+     * TODO: Finish this.
+     * @param size
+     * @return
+     */
     public static boolean[][][] genCands(int size)
     {
         boolean[][][] cands = new boolean[(int) Math.pow(2, size * size)][size][size];
@@ -120,6 +183,11 @@ public class MoscowPavingProblem
         return cands;
     }
 
+    /**
+     * TODO: Finish this
+     * @param solution
+     * @param size
+     */
     public static void printSolution(boolean[][] solution, int size)
     {
         String line = "+" + "-+".repeat(size);
