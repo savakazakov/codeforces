@@ -1,132 +1,55 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
+/**
+ * TODO: Explain the problem here.
+ * TODO: State assumptions here.
+ * TODO: Explain the symbol of interest here and that it results to true in a boolean format.
+ * TODO: Explain that the next step is to generate only correct solutions.
+ * TODO: I.e. bring the correctness of the solution into the generation process.
+ */
 public class MoscowPavingProblem
 {
-    private static final int n = 5;
-    // private static boolean[][] solution = new boolean[n][n];
-    // private static int[][] trackSquaresMatrix = new int[n][n];
-
     public static void main(String[] args)
     {
-        // Testing chkCand.
-        // solution = new boolean[][]{ {true, true, true},
-        //                             {true, false, true},
-        //                             {true, true, false} };
+        List<boolean[][]> cands2 = genCandsN(3, 3);
 
-        // printSolution(solution);
+        System.out.println(cands2.size());
 
-        boolean[][][] cands = genCands(n);
-        // printCands(cands, n);
-        int maxOs = 0, curOs = 0;
-
-
-        // TODO: Fix this. Dynamic ADT.
-        // Ugly but will do for now.
-        List<boolean[][]> sols = new ArrayList<>();
-
-        for (boolean[][] c : cands)
+        for (boolean[][] c : cands2)
         {
-            if (!chkCand(c, n, 0, 0))
-                continue;
-            
-            curOs = maxOs(c);
-
-            if (curOs > maxOs)
-            {
-                maxOs = curOs;
-                sols.clear();
-                sols.add(c);
-            }
-            else if (curOs == maxOs)
-            {
-                sols.add(c);
-            }
+            printSolution(c);
         }
 
-        System.out.println("Maximum number of Os: " + maxOs);
-        System.out.println("Solutions: \n\n");
-
-        for (boolean[][] sol : sols)
+        for (int i = 2; i <= 10; i++)
         {
-            printSolution(sol, n);
-            System.out.println("\n");
+            
         }
     }
 
-    // public static boolean checkPossible(int x, int y)
-    // {
-    //     // Down and to the right.
-    //     for(int i = 1; i < n; i++)
-    //     {
-    //         if(x + i >= n || y + i >= n)
-    //             break;
-
-    //         if(solution[x + i][y] && solution[x][y + i] && solution[x + i][y + i])
-    //         {
-    //             return false;
-    //         }
-    //     }
-
-    //     // Down and to the left.
-    //     for(int i = 1; i < n; i++)
-    //     {
-    //         if(x - i < 0 || y + i >= n)
-    //             break;
-
-    //         if(solution[x - i][y] && solution[x][y + i] && solution[x - i][y + i])
-    //         {
-    //             return false;
-    //         }
-    //     }
-
-    //     // Up and to the left.
-    //     for(int i = 1; i < n; i++)
-    //     {
-    //         if(x - i < 0 || y - i < 0)
-    //             break;
-
-    //         if(solution[x - i][y] && solution[x][y - i] && solution[x - i][y - i])
-    //         {
-    //             return false;
-    //         }
-    //     }
-
-    //     // Up and to the right.
-    //     for(int i = 1; i < n; i++)
-    //     {
-    //         if(x + i >= n || y - i < 0)
-    //             break;
-
-    //         if(solution[x + i][y] && solution[x][y - i] && solution[x + i][y - i])
-    //         {
-    //             return false;
-    //         }
-    //     }
-
-    //     // // This should never be reached.
-    //     // System.out.println("This should never be reached.");
-    //     return true;
-    // }
-
     /**
-     * Checks a candidate solution.
-     * TODO - finish this comment.
-     * @param cand
-     * @param size
-     * @param x
-     * @param y
+     * Checks if the candidate is a valid solution.
+     * This uses recursion with a subset of the candidate,
+     * hence the extra parameters.
+     * @param cand - The 2D array holding the candidate.
+     * @param size - The length up to which the candidate should be checked. (Default = cand.length)
+     * @param x - The starting position on the first axis. (Default = 0)
+     * @param y - The starting position on the second axis. (Default = 0)
      * @return
      */
     public static boolean chkCand(boolean[][] cand, int size, int x, int y)
     {
+        // The terminating condition.
         if (size == 1)
             return true;
         
         for (int i = 1; i < size; i++)
         {
+            // Check only the squares with the (x, y) starting position (along the diagonal of the candidate).
             if (cand[x][y] && cand[x + i][y] && cand[x][y + i] && cand[x + i][y + i])
                 return false;
+            // Go recursively over every other possible starting position.
             if (!(chkCand(cand, size - i, x + i, y) && chkCand(cand, size - i, x, y + i) && chkCand(cand, size - i, x + i, y + i)))
                 return false;
         }
@@ -139,26 +62,26 @@ public class MoscowPavingProblem
      * @param sol
      * @return
      */
-    public static int maxOs(boolean[][] sol)
+    public static int maxElm(boolean[][] sol)
     {
-        int numOfOs = 0;
+        int numOfElm = 0;
 
         for (int i = 0; i < sol.length; i++)
         {
             for (int j = 0; j < sol.length; j++)
             {
                 if(sol[i][j])
-                    numOfOs++;
+                    numOfElm++;
             }
         }
 
-        return numOfOs;
+        return numOfElm;
     }
 
     /**
-     * TODO: Finish this.
-     * @param size
-     * @return
+     * Generate all possible permutations of all possible solutions
+     * @param size - The size of the candidate 2D array.
+     * @return - A 3D array of candidates.
      */
     public static boolean[][][] genCands(int size)
     {
@@ -184,22 +107,66 @@ public class MoscowPavingProblem
     }
 
     /**
-     * TODO: Finish this
-     * @param solution
-     * @param size
+     * Generate all possible permutations with 
+     * repetitions with a specific number of elements.
+     * @param size - The size of the candidate 2D array.
+     * @param numOfElm - The desired number of Elm.
+     * @return - A 3D array of candidates.
      */
-    public static void printSolution(boolean[][] solution, int size)
+    public static List<boolean[][]> genCandsN(int size, int numOfElm)
     {
-        String line = "+" + "-+".repeat(size);
+        List<boolean[][]> cands = new ArrayList<>();
+        genCandsNTR(0, 0, numOfElm, new boolean[size][size], cands);
+
+        return cands;
+    }
+    
+    /**
+     * An almost Tail Recursive algorithm, invoked of the genCands method.
+     * @param ctr - The current index in the 2D array.
+     * @param numOfElmCtr - The current number of elements.
+     * @param numOfElm - The required number of elements.
+     * @param cand - The accumulator candidate.
+     * @param cands - The ADT to hold the candidates with numOfElm elements.
+     */
+    public static void genCandsNTR(int ctr, int numOfElmCtr, int numOfElm, boolean[][] cand, List<boolean[][]> cands)
+    {
+        // Check if this candidate has the required number of elements.
+        if (numOfElmCtr == numOfElm)
+        {
+            cands.add(deepCopy(cand));
+            return;
+        }
+        // Check if it is about to go out of bounds of the candidate.
+        else if (ctr >= Math.pow(cand.length, 2))
+            return;
+
+        // The beauty of the recursion is the fact that it makes each cell of the array
+        // first true and then false for the solution of the rest of the candidate.
+        cand[ctr / cand.length][ctr % cand.length] = true;
+        genCandsNTR(++ctr, ++numOfElmCtr, numOfElm, cand, cands);
+        cand[(ctr - 1) / cand.length][(ctr - 1) % cand.length] = false;
+        genCandsNTR(ctr, --numOfElmCtr, numOfElm, cand, cands);
+    }
+
+    /**
+     * Print the solution as on the console. Where "O" is the symbol of interest or element.
+     * I.e. no 4 elements are the vertices of a square.
+     * @param solution - The 2D array that stores the solution.
+     */
+    public static void printSolution(boolean[][] sol)
+    {
+        // Initialise the strings to be used in the printing.
+        String line = "+" + "-+".repeat(sol.length);
         String middleLine = "";
 
-        for(int i = 0; i < size; i++)
+        for(int i = 0; i < sol.length; i++)
         {
             System.out.println(line);
             
-            for(int j = 0; j < size; j++)
+            for(int j = 0; j < sol.length; j++)
             {
-                middleLine += "|" + (solution[i][j] ? "O" : "X"); 
+                middleLine += "|" + (sol[i][j] ? "O" : "X"); 
             }
 
             System.out.println(middleLine + "|");
@@ -209,35 +176,36 @@ public class MoscowPavingProblem
         System.out.println(line);
     }
 
-    public static void printCands(boolean[][][] cands, int size)
+    /**
+     * Perform a deep copy of a 2D array.
+     * This is required since Java only does shallow cloning.
+     * @param original - The 2D array to be deep copied.
+     * @return - The copy of the 2D array.
+     */
+    public static boolean[][] deepCopy(boolean[][] original)
     {
-        System.out.println("Length of Candidates: " + cands.length);
-        for(int i = 0; i < cands.length; i++)
+        if (original == null)
+            return null;
+
+        final boolean[][] result = new boolean[original.length][];
+
+        for (int i = 0; i < original.length; i++)
         {
-            printSolution(cands[i], size);
-            System.out.println("\n");
+            result[i] = Arrays.copyOf(original[i], original[i].length);
         }
+
+        return result;
     }
 
-    // public static void printSolution(boolean[][] solution)
-    // {
-    //     String line = "+" + "---+".repeat(n);
-    //     String intermediateLine = "|   ".repeat(n) + "|";
-    //     String middleLine = "";
-
-    //     for(int i = 0; i < n; i++)
-    //     {
-    //         System.out.println(line + "\n" + intermediateLine);
-            
-    //         for(int j = 0; j < n; j++)
-    //         {
-    //             middleLine += "| " + (solution[i][j] ? "O " : "X "); 
-    //         }
-
-    //         System.out.println(middleLine + "|\n" + intermediateLine);
-    //         middleLine = "";
-    //     }
-
-    //     System.out.println(line);
-    // }
+    /**
+     * TOOD: Finish this comment!
+     * @param firstCand
+     * @param secondCand
+     * @return
+     */
+    public static boolean checkUniqueness(boolean[][] firstCand, boolean[][] secondCand)
+    {
+        
+        return false;
+    }
 }
