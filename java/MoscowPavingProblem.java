@@ -13,19 +13,29 @@ public class MoscowPavingProblem
 {
     public static void main(String[] args)
     {
-        List<boolean[][]> cands2 = genCandsN(3, 3);
+        // List<boolean[][]> cands2 = genCandsN(3, 3);
 
-        System.out.println(cands2.size());
+        // System.out.println(cands2.size());
 
-        for (boolean[][] c : cands2)
-        {
-            printSolution(c);
-        }
+        // for (boolean[][] c : cands2)
+        // {
+        //     printSolution(c);
+        // }
 
-        for (int i = 2; i <= 10; i++)
-        {
+        boolean[][] first = new boolean[][]{ {true, true, true},
+                                             {true, false, true},
+                                             {true, true, false} };
+
+        boolean[][] second = new boolean[][]{ {true, true, false},
+                                              {true, false, true},
+                                              {true, true, true} };
+        
+        System.out.println(chkUnique(first, second));
+
+        // for (int i = 2; i <= 10; i++)
+        // {
             
-        }
+        // }
     }
 
     /**
@@ -198,14 +208,100 @@ public class MoscowPavingProblem
     }
 
     /**
-     * TOOD: Finish this comment!
-     * @param firstCand
-     * @param secondCand
-     * @return
+     * Check if two 2D arrays are not identical.
+     * @Note This assumes the 2D arrays are of the same dimensions.
+     * @param sol - The proposed solution.
+     * @param cand - The candidate.
+     * @return - true if not identical and false otherwise.
      */
-    public static boolean checkUniqueness(boolean[][] firstCand, boolean[][] secondCand)
-    {
-        
+    public static boolean chkIdent(boolean[][] sol, boolean[][] cand)
+    {        
+        for (int i = 0; i < sol.length; i++)
+        {
+            for (int j = 0; j < sol.length; j++)
+            {
+                if (sol[i][j] != cand[i][j])
+                    return true;
+            }
+        }
+
         return false;
+    }
+
+    /**
+     * Check if two 2D arrays are not identical if the second is flipped horizontally.
+     * @Note This assumes the 2D arrays are of the same dimensions.
+     * @param sol - The proposed solution.
+     * @param cand - The candidate.
+     * @return - true if not identical and false otherwise.
+     */
+    public static boolean chkIdentHor(boolean[][] sol, boolean[][] cand)
+    {        
+        for (int i = 0; i < sol.length; i++)
+        {
+            for (int j = 0; j < sol.length; j++)
+            {
+                if (sol[i][j] != cand[sol.length - i - 1][j])
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if two 2D arrays are not identical if the second is flipped vertically.
+     * @Note This assumes the 2D arrays are of the same dimensions.
+     * @param sol - The proposed solution.
+     * @param cand - The candidate.
+     * @return - true if not identical and false otherwise.
+     */
+    public static boolean chkIdentVert(boolean[][] sol, boolean[][] cand)
+    {        
+        for (int i = 0; i < sol.length; i++)
+        {
+            for (int j = 0; j < sol.length; j++)
+            {
+                if (sol[i][j] != cand[i][sol.length - j - 1])
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Check if two 2D arrays are not identical if the second is flipped along the diagonal.
+     * @Note This assumes the 2D arrays are of the same dimensions.
+     * @param sol - The proposed solution.
+     * @param cand - The candidate.
+     * @return - true if not identical and false otherwise.
+     */
+    public static boolean chkIdentDiag(boolean[][] sol, boolean[][] cand)
+    {        
+        for (int i = 0; i < sol.length; i++)
+        {
+            for (int j = 0; j < sol.length; j++)
+            {
+                if (sol[i][j] != cand[sol.length - i - 1][sol.length - j - 1])
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if two 2D arrays are unique.
+     * This means the second is not a flipped or rotated version of the first.
+     * @Note This assumes the 2D arrays are of the same dimensions.
+     * @param sol - The proposed solution.
+     * @param cand - The candidate.
+     * @return - true if unique and false otherwise.
+     */
+    public static boolean chkUnique(boolean[][] sol, boolean[][] cand)
+    {
+        return (chkIdent(sol, cand) && chkIdentHor(sol, cand) && chkIdentVert(sol, cand) && chkIdentDiag(sol, cand));
     }
 }
