@@ -22,20 +22,53 @@ public class MoscowPavingProblem
         //     printSolution(c);
         // }
 
-        boolean[][] first = new boolean[][]{ {true, true, true},
-                                             {true, false, true},
-                                             {true, true, false} };
+        // boolean[][] first = new boolean[][]{ {true, true, true},
+        //                                      {true, true, true},
+        //                                      {true, true, false} };
 
-        boolean[][] second = new boolean[][]{ {true, true, false},
-                                              {true, false, true},
-                                              {true, true, true} };
-        
-        System.out.println(chkUnique(first, second));
+        // boolean[][] second = new boolean[][]{ {true, true, false},
+        //                                       {true, true, true},
+        //                                       {true, true, true} };
 
-        // for (int i = 2; i <= 10; i++)
+        // boolean[][] third = new boolean[][]{ {true, true, false},
+        //                                       {true, true, true},
+        //                                       {true, true, true} };
+
+        // ArrayList<boolean[][]> cands = new ArrayList<>();
+        // cands.add(first);
+        // cands.add(second);
+        // cands.add(third);
+
+        // List<boolean[][]> candsResult = pruneCands(cands);
+
+        // for(boolean[][] c : candsResult)
         // {
-            
+        //     printSolution(c);
         // }
+        
+        // System.out.println(chkUnique(first, second));
+
+        int elmCtr = 0;
+        List<boolean[][]> cands;
+
+        for (int i = 2; i <= 5; i++)
+        {
+            while (!pruneCands(genCandsN(i, ++elmCtr)).isEmpty());
+
+            cands = pruneCands(genCandsN(i, --elmCtr));
+
+            // for (boolean[][] c : cands)
+            //     printSolution(c);
+
+            // cands = pruneCands(cands);
+
+            // Print the maximum number of elements.
+            System.out.println("Max number of elements: " + elmCtr);
+
+            // Print the solutions.
+            for (boolean[][] c : cands)
+                printSolution(c);
+        }
     }
 
     /**
@@ -46,7 +79,7 @@ public class MoscowPavingProblem
      * @param size - The length up to which the candidate should be checked. (Default = cand.length)
      * @param x - The starting position on the first axis. (Default = 0)
      * @param y - The starting position on the second axis. (Default = 0)
-     * @return
+     * @return - True if candidate is square free and false otherwise.
      */
     public static boolean chkCand(boolean[][] cand, int size, int x, int y)
     {
@@ -65,27 +98,6 @@ public class MoscowPavingProblem
         }
 
         return true;
-    }
-
-    /**
-     * TODO: Finish this.
-     * @param sol
-     * @return
-     */
-    public static int maxElm(boolean[][] sol)
-    {
-        int numOfElm = 0;
-
-        for (int i = 0; i < sol.length; i++)
-        {
-            for (int j = 0; j < sol.length; j++)
-            {
-                if(sol[i][j])
-                    numOfElm++;
-            }
-        }
-
-        return numOfElm;
     }
 
     /**
@@ -170,11 +182,11 @@ public class MoscowPavingProblem
         String line = "+" + "-+".repeat(sol.length);
         String middleLine = "";
 
-        for(int i = 0; i < sol.length; i++)
+        for (int i = 0; i < sol.length; i++)
         {
             System.out.println(line);
             
-            for(int j = 0; j < sol.length; j++)
+            for (int j = 0; j < sol.length; j++)
             {
                 middleLine += "|" + (sol[i][j] ? "O" : "X"); 
             }
@@ -212,7 +224,7 @@ public class MoscowPavingProblem
      * @Note This assumes the 2D arrays are of the same dimensions.
      * @param sol - The proposed solution.
      * @param cand - The candidate.
-     * @return - true if not identical and false otherwise.
+     * @return - True if not identical and false otherwise.
      */
     public static boolean chkIdent(boolean[][] sol, boolean[][] cand)
     {        
@@ -233,7 +245,7 @@ public class MoscowPavingProblem
      * @Note This assumes the 2D arrays are of the same dimensions.
      * @param sol - The proposed solution.
      * @param cand - The candidate.
-     * @return - true if not identical and false otherwise.
+     * @return - True if not identical and false otherwise.
      */
     public static boolean chkIdentHor(boolean[][] sol, boolean[][] cand)
     {        
@@ -254,7 +266,7 @@ public class MoscowPavingProblem
      * @Note This assumes the 2D arrays are of the same dimensions.
      * @param sol - The proposed solution.
      * @param cand - The candidate.
-     * @return - true if not identical and false otherwise.
+     * @return - True if not identical and false otherwise.
      */
     public static boolean chkIdentVert(boolean[][] sol, boolean[][] cand)
     {        
@@ -276,7 +288,7 @@ public class MoscowPavingProblem
      * @Note This assumes the 2D arrays are of the same dimensions.
      * @param sol - The proposed solution.
      * @param cand - The candidate.
-     * @return - true if not identical and false otherwise.
+     * @return - True if not identical and false otherwise.
      */
     public static boolean chkIdentDiag(boolean[][] sol, boolean[][] cand)
     {        
@@ -298,10 +310,42 @@ public class MoscowPavingProblem
      * @Note This assumes the 2D arrays are of the same dimensions.
      * @param sol - The proposed solution.
      * @param cand - The candidate.
-     * @return - true if unique and false otherwise.
+     * @return - True if unique and false otherwise.
      */
     public static boolean chkUnique(boolean[][] sol, boolean[][] cand)
     {
         return (chkIdent(sol, cand) && chkIdentHor(sol, cand) && chkIdentVert(sol, cand) && chkIdentDiag(sol, cand));
+    }
+
+    /**
+     * TODO: Finish this.
+     * @param cands
+     * @return
+     */
+    public static List<boolean[][]> pruneCands(List<boolean[][]> cands)
+    {
+        List<boolean[][]> candsCopy = new ArrayList<>(cands);
+
+        // Remove invalid solutions.
+        for (boolean[][] c : cands)
+        {
+            if (!chkCand(c, c.length, 0, 0))
+                candsCopy.remove(c);
+        }
+
+        if (candsCopy.isEmpty())
+            return candsCopy;
+
+        // Remove duplicate solutions.
+        for (int i = 0; i < cands.size() - 1; i++)
+        {
+            for (int j = i + 1; j < cands.size(); j++)
+            {
+                if (!chkUnique(cands.get(i), cands.get(j)))
+                    candsCopy.remove(cands.get(j));
+            }
+        }
+
+        return candsCopy;
     }
 }
