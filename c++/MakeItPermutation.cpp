@@ -33,44 +33,72 @@ int main()
             vec.push_back(temp);
         }
 
-        // std::cout << "vec = { ";
-        // for (int n : vec)
-        //     std::cout << n << ", ";
-        // std::cout << "}; \n";
-
-        // cout << "\n";
-
         // First remove duplicates, because they have to be removed anyway.
         sort(vec.begin(), vec.end());
 
         size = vec.size();
+        // cout << size << " = size\n";
 
         vec.erase(unique(vec.begin(), vec.end()), vec.end());
 
+        // cout << vec.size() << " = vec.size()\n";
+
         // Add the cost associated with removing duplicates.
         cost += (size - vec.size()) * c;
-        cout << "Cost after sorting: " << cost;
+
+        // cout << "CoST begining: " << cost << "\n";
+
+        // Check if it is a permutation already.
+        if (vec.size() == vec.back())
+        {
+            cout << /* "\033[1;31m" << */ cost << /* "\033[0m\n"<<  */"\n";
+            continue;
+        }
 
         for (int j = vec.size() - 1; j >= 0; j--)
         {
-            if (d * (vec[j] - j) <= c)
+            // cout << "d * (vec[j] - j) = " << d * (vec[j] - j) << "\n";
+            if (vec[j] == j + 1)
             {
-                cout << (cost + d * (vec[j] - j));
+                // cout << "\033[1;31m" << cost << "\033[0m\n";
+                // cout << "ONE\n";
+                break;
+            }
+            else if (d * (vec[j] - j - 1) <= c)
+            {
+                // cout << "TWO\n";
+                cost += d * (vec[j] - j - 1);
                 break;
             }
             else
             {
+                // cout << "THREE\n";
                 cost += c;
             }
         }
 
-        // std::cout << "vec = { ";
-        // for (int j = vec.size() - 1; j >= 0; j --)
-        //     std::cout << vec[j] << ", ";
-        // std::cout << "}; \n";
+        // cout << "CoST here: " << cost << "\n";
 
-        return 0;
+        // If all elements have been removed.
+        if (cost == size * c)
+        {
+            if (c + d <= (vec[0] - 1) * d)
+            {
+                cost += d;
+            }
+            else
+            {
+                cost -= c;
+                cost += (vec[0] - 1) * d;
+            }
+
+            // cout << "In all elemts have been removed.\n";
+        }
+
+        cout << /* "\033[1;31m" <<*/ cost /* << "\033[0m\n" */<< "\n";
     }
+
+    return 0;
 }
 
 /* 
